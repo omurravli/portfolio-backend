@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 
 import dj_database_url
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +42,9 @@ if RAILWAY_HOST:
 
 
 INSTALLED_APPS = [
+    "unfold",
+    "unfold.contrib.filters",
+    "unfold.contrib.forms",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -113,10 +117,89 @@ STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# django-unfold — modern admin theme, brand-matched to the site (violet/cyan, dark).
+UNFOLD = {
+    "SITE_TITLE": "Ömür Ravlı — Admin",
+    "SITE_HEADER": "Ömür Ravlı",
+    "SITE_SUBHEADER": "Site content",
+    "SITE_SYMBOL": "bolt",
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": False,
+    "BORDER_RADIUS": "8px",
+    "COLORS": {
+        "primary": {
+            "50": "245 243 255",
+            "100": "237 233 254",
+            "200": "221 214 254",
+            "300": "196 181 253",
+            "400": "167 139 250",
+            "500": "139 92 246",
+            "600": "124 58 237",
+            "700": "109 40 217",
+            "800": "91 33 182",
+            "900": "76 29 149",
+            "950": "46 16 101",
+        },
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "navigation": [
+            {
+                "title": "Site content",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Profile & hero",
+                        "icon": "person",
+                        "link": reverse_lazy("admin:content_siteprofile_changelist"),
+                    },
+                    {
+                        "title": "Stats",
+                        "icon": "insights",
+                        "link": reverse_lazy("admin:content_stat_changelist"),
+                    },
+                    {
+                        "title": "Skills",
+                        "icon": "code",
+                        "link": reverse_lazy("admin:content_skillcategory_changelist"),
+                    },
+                    {
+                        "title": "Timeline",
+                        "icon": "timeline",
+                        "link": reverse_lazy("admin:content_timelineentry_changelist"),
+                    },
+                    {
+                        "title": "Process",
+                        "icon": "conveyor_belt",
+                        "link": reverse_lazy("admin:content_processstage_changelist"),
+                    },
+                    {
+                        "title": "Projects",
+                        "icon": "rocket_launch",
+                        "link": reverse_lazy("admin:content_project_changelist"),
+                    },
+                ],
+            },
+            {
+                "title": "Access",
+                "separator": True,
+                "items": [
+                    {
+                        "title": "Users",
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                    },
+                ],
+            },
+        ],
+    },
+}
 
 
 # CORS — allow the Next.js frontend to read the API from the browser.
